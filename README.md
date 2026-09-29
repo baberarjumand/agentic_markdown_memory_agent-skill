@@ -2,13 +2,15 @@
 
 A skill that sets up a markdown memory layout for agents. The layout keeps a short always-on file and loads everything else only when a task needs it.
 
+Repository: [baberarjumand/agentic_markdown_memory_agent-skill](https://github.com/baberarjumand/agentic_markdown_memory_agent-skill)
+
 ## Install
 
 ```text
-npx skills add <owner>/agentic-markdown-memory
+npx skills add baberarjumand/agentic_markdown_memory_agent-skill
 ```
 
-Replace `<owner>` with the GitHub account that hosts this repo. In the agent chat, run:
+In the agent chat, run:
 
 ```text
 /initialize-agentic-memory
