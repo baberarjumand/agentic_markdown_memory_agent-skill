@@ -1,10 +1,12 @@
 ---
 name: initialize-agentic-memory
 description: >
-  Initializes a repository's agentic markdown memory. Asks whether to analyze
-  the project, proposes a layout, and moves files only after showing a move
-  plan and receiving a final confirmation. Creates a Cursor rule when Cursor
-  is in use, otherwise writes AGENTS.md. Use only when the user invokes
+  Initializes a repository's agentic markdown memory when the agent can list
+  and edit the project on disk (Cursor, VS Code, or a local CLI). Asks whether
+  to analyze the project, proposes a layout, and moves files only after showing
+  a move plan and receiving a final confirmation. Creates a Cursor rule when
+  Cursor is in use, otherwise writes AGENTS.md. If there is no local filesystem,
+  the agent tells the user and stops. Use only when the user invokes
   /initialize-agentic-memory.
 disable-model-invocation: true
 ---
@@ -13,7 +15,13 @@ disable-model-invocation: true
 
 Run this only when the user invokes `/initialize-agentic-memory`. Do not reorganize files before the final confirmation in this procedure.
 
-Read [references/layout.md](references/layout.md) before proposing a structure. The default layout and the purpose of each path are defined there.
+## Filesystem required
+
+This skill runs only when you can list the project directory and create or move files in it. That is Cursor, VS Code with an agent that can edit the workspace, or a local CLI.
+
+If you cannot do both, stop. Tell the user this skill needs a local filesystem, and name Cursor, VS Code, or a local CLI as the place to run it. Do not ask questions. Do not propose a layout. Do not read [references/layout.md](references/layout.md). Do not write `AGENTS.md` or a rule file in the chat.
+
+When you can read and write the project, read [references/layout.md](references/layout.md) before proposing a structure.
 
 ## Detect the editor
 
@@ -23,7 +31,9 @@ Treat the session as Cursor when any of these are true:
 - the user says they are using Cursor
 - this session is Cursor
 
-Otherwise use the generic agent path. Ask only if none of those signals exist and the choice would change which instruction file you write.
+Otherwise use the generic agent path: write `AGENTS.md` and do not create `.cursor/rules/`. Ask only if none of those signals exist and the choice would change which instruction file you write.
+
+Claude Code, Codex, Gemini CLI, Grok, DeepSeek coding agents, and VS Code agents that can read and write the project use this generic path. Cursor adds the rule file in Step 4.
 
 ## Step 1. Ask whether to analyze
 
@@ -104,3 +114,4 @@ After a clear yes:
 - Do not move secrets, `.env` files, or credentials into `docs/` or `knowledge/`.
 - Do not create the optional folders in the layout (`clients/`, `sources/`, `knowledge/`, `tasks/`, `memory/`) unless the plan has a file that belongs there.
 - A how-to and a skill must not both contain the same procedure. The skill points at the how-to.
+- Do not continue in a chat that cannot list and edit the project. Stop after telling the user to use Cursor, VS Code, or a local CLI.
