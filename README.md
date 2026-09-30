@@ -53,9 +53,10 @@ Repo: [github.com/baberarjumand/agentic_markdown_memory_agent-skill](https://git
 | --- | --- |
 | **Confirm before any move** | Asks whether to analyze, then whether to migrate, then shows a move table and waits for a final yes |
 | **Existing files stay intact** | Reports where knowledge already lives and proposes destinations. Does not overwrite a file that is already there |
-| **Default layout** | `AGENTS.md`, `docs/` (tutorials, how-to, reference, explanation, decisions, archive), `knowledge/`, `sources/`, `tasks/` — only the folders the project needs |
-| **Cursor rule** | When Cursor is in use, writes `.cursor/rules/agentic-memory.mdc` scoped to memory files. It points at `AGENTS.md` and is not always-on |
+| **Default layout** | `AGENTS.md`, `docs/` (tutorials, how-to, reference, explanation, decisions, archive), `knowledge/`, `sources/`, `tasks/`, optional `SCRATCHPAD.md` / `memory/gotchas.md` — only what the project needs |
+| **Cursor rule** | When Cursor is in use, writes `.cursor/rules/agentic-memory.mdc` scoped to memory files. It points at `AGENTS.md` and is not always-on. Optional on-demand `plan-gate.mdc` for plan-before-implement |
 | **Other agents** | Writes `AGENTS.md` as the behavior file. No `.cursor/` directory |
+| **Session hygiene** | Scratchpad for the current checklist (clear on done). End-of-session reflection into durable memory. No activity-log dumps |
 | **Local filesystem only** | If the agent cannot list and edit the project, it says so and stops |
 | **Research-backed** | Layout comes from the notes in [`docs/research/`](docs/research/README.md). The synthesis is [`docs/research/FINDINGS.md`](docs/research/FINDINGS.md) |
 
@@ -339,7 +340,7 @@ Ask: analyze the current project?
                                      Cursor: write .cursor/rules/agentic-memory.mdc
 ```
 
-The agent loads this skill's `name` and `description` first, then `SKILL.md`, then `references/layout.md` and `references/cursor-rule.md` only when it needs them ([specification](https://agentskills.io/specification)).
+The agent loads this skill's `name` and `description` first, then `SKILL.md`, then `references/layout.md`, `references/cursor-rule.md`, and `references/plan-gate.md` only when it needs them ([specification](https://agentskills.io/specification)).
 
 [↑ Back to top](#table-of-contents)
 
@@ -354,7 +355,8 @@ agentic_markdown_memory_agent-skill/
 │   ├── SKILL.md
 │   └── references/
 │       ├── layout.md
-│       └── cursor-rule.md
+│       ├── cursor-rule.md
+│       └── plan-gate.md
 └── docs/research/
     ├── README.md
     ├── FINDINGS.md

@@ -50,6 +50,8 @@ Loaded text is treated with roughly equal weight. A constraint buried in a long 
 | Decisions log | Dated entries: what changed, why, and the scope. Fetched, not prepended. | The transcript ([012](analyzed-links/012_markdown-as-agent-task-format.md), [015](analyzed-links/015_agentic-context-management-folders.md)). |
 | Activity log | Append-only, with a grep-friendly prefix. Read from the end. | The reasons that must survive. Those are decisions ([012](analyzed-links/012_markdown-as-agent-task-format.md), [018](analyzed-links/018_karpathy-llm-wiki.md)). |
 | Handoff or notes | What the next session must know after a reset: decisions, open problems, last files. | A lossy summary of every tool result ([016](analyzed-links/016_managing-context-for-ai-agents.md), [017](analyzed-links/017_anthropic-context-engineering.md)). |
+| Scratchpad | Current-task checklist and immediate next steps. Cleared when the task is done. | Durable evidence. Line-by-line activity logs. |
+| Gotchas | Roadblocks hit and how they were fixed, so later sessions do not pay the same tokens. | A full transcript of the debugging session. |
 
 Path is identity and scope. `clients/acme/tone.md` says who it belongs to before anyone reads it ([003](analyzed-links/003_open-knowledge-format.md), [015](analyzed-links/015_agentic-context-management-folders.md)). Status stays in frontmatter so a status change does not rename the file ([012](analyzed-links/012_markdown-as-agent-task-format.md)).
 
@@ -94,9 +96,11 @@ Kept outside the shared tree, because they are one person's session or one tool'
 
 ```text
 CLAUDE.local.md
+SCRATCHPAD.md
 HANDOFF.md
 memory/
   MEMORY.md
+  gotchas.md
   <topic>.md
 ```
 
@@ -122,8 +126,10 @@ If the tool already stores auto memory outside the repo, use that location. Do n
 | `knowledge/log.md` | Append-only record of ingests, queries, and lint. Each entry starts with a date heading a search can tail. | The latest entries, when the task needs to know what just changed. |
 | `sources/<source-id>.md` | What a source actually said. Author, dates, locator, capture limits. Immutable. | When a claim in `knowledge/` must be checked. |
 | `tasks/001-short-title.md` | One unit of work. Frontmatter holds id, status, owner, priority, and tags. The body holds why, and a "done when" list. Status is not in the filename. | The one task being done. A status grep selects it. Other task bodies stay closed. |
+| `SCRATCHPAD.md` | Current-task checklist and immediate next steps. Heavily edited during the session. Cleared when the task is done. Never cited as evidence. | When the task is in progress. Not always-on. |
 | `HANDOFF.md` | What the next session must know: decisions made, problems still open, files just touched. Written at the end of a long session. Folded into `knowledge/` or `docs/decisions/` and then removed, so it does not become a second always-on file. | The start of the following session only. |
 | `memory/MEMORY.md` | Short index of notes the agent wrote for itself: corrections, preferences, discoveries that are not already in the repo. One line per topic, pointing at a topic file. About the first 200 lines may load. The agent does not record facts it can read from the code. | The head of the file, every session for that person. |
+| `memory/gotchas.md` | Durable roadblocks and how they were fixed. Reflection promotes here so a later agent does not hit the same wall. | When the task touches a domain that has failed before, or at end-of-session reflection. |
 | `memory/<topic>.md` | The detail behind one memory-index line. | When the index line matches the task. |
 
 Add these only when the repo has that problem:
@@ -134,7 +140,13 @@ Add these only when the repo has that problem:
 
 A how-to and a skill are different files. The how-to is documentation a person follows. The skill is a procedure the agent runs. When they describe the same steps, the skill points at the how-to, or the how-to is the skill's reference file. The steps are not written twice.
 
-Empty directories are not created in advance. A folder appears with its first real file and an index line. `sources/` and `knowledge/` appear together, because a synthesis page without a source record is an uncited claim. `tasks/` appears when work is handed to an agent as a file. `memory/` appears when the tool does not already provide an agent-written memory index outside the repo.
+Empty directories are not created in advance. A folder appears with its first real file and an index line. `sources/` and `knowledge/` appear together, because a synthesis page without a source record is an uncited claim. `tasks/` appears when work is handed to an agent as a file. `memory/` appears when the tool does not already provide an agent-written memory index outside the repo. `SCRATCHPAD.md` appears when the agent needs a working checklist that is not a `tasks/` file. `HANDOFF.md` appears when a session must continue in a fresh chat.
+
+Scratchpad, handoff, and task files have different end-of-life rules. The scratchpad is wiped when the task is done. The handoff is folded into durable files and then removed. A task file keeps its status in frontmatter and may outlive one session. None of them hold line-by-line activity logs. Reflection produces memory: at the end of a non-trivial task, record where the friction was, what repo-specific fact was missing, and what lesson should survive, then promote those answers into `memory/gotchas.md`, `memory/<topic>.md`, `docs/decisions/`, or `knowledge/` before clearing the scratchpad.
+
+Constraints in rules and `AGENTS.md` are imperative. Current belief in `knowledge/` is cited synthesis. Wiki pages are not migrated wholesale into always-on or glob rules.
+
+For non-trivial work (new module, schema change, auth, money, migration, multi-service contracts), the agent produces Goal, blocking questions with recommended defaults, falsifiable assumptions, and a Plan, then waits. Tiny obvious edits skip the ceremony. On Cursor that gate lives in an on-demand `.cursor/rules/plan-gate.mdc` (`alwaysApply: false`). `AGENTS.md` points at it; it does not paste the full protocol.
 
 ## How a file is written
 
@@ -181,7 +193,7 @@ A moving value (a SHA, a line count, "last synced") lives in one place. Other pa
 
 Git is the audit trail. A state change is a commit. The prompt does not also contain the history ([001](analyzed-links/001_durable-ai-knowledge-base-markdown-git.md), [012](analyzed-links/012_markdown-as-agent-task-format.md)).
 
-When a session must continue, write a short handoff from a template and start the next session there. Compaction is a fallback. If it is used, keep decisions, open bugs, and implementation facts, and drop raw tool output. Do not compact the same session over and over ([016](analyzed-links/016_managing-context-for-ai-agents.md), [017](analyzed-links/017_anthropic-context-engineering.md)).
+When a session must continue, write a short handoff from a template and start the next session there. Prefer reflection into durable files over dumping the session into the scratchpad. Compaction is a fallback. If it is used, keep decisions, open bugs, and implementation facts, and drop raw tool output. Do not compact the same session over and over ([016](analyzed-links/016_managing-context-for-ai-agents.md), [017](analyzed-links/017_anthropic-context-engineering.md)).
 
 Search for an existing page before creating one ([001](analyzed-links/001_durable-ai-knowledge-base-markdown-git.md)). One canonical copy of any instruction. Other entry points point at it ([000](analyzed-links/000_ai-powered-markdown-knowledge-base.md), [019](analyzed-links/019_agents-md-and-skills.md)).
 
@@ -243,7 +255,7 @@ A skill other agents can import is a directory whose name matches the `name` fie
 
 Put the skill at `.agents/skills/<name>/`. Cursor reads that path, and so do other agents that follow the Agent Skills layout. `references/` holds the layout and the Cursor rule template. `SKILL.md` says when to open them.
 
-Cursor rules are `.cursor/rules/*.mdc` with frontmatter. A long rule that is always applied taxes every session. The memory rule stays off until a memory file is in play, and it points at `AGENTS.md` instead of repeating it. Agents that are not Cursor get the same instructions from `AGENTS.md` alone.
+Cursor rules are `.cursor/rules/*.mdc` with frontmatter. A long rule that is always applied taxes every session. The memory rule stays off until a memory file is in play, and it points at `AGENTS.md` instead of repeating it. An optional plan-gate rule stays off until the task needs it. Agents that are not Cursor get the same instructions from `AGENTS.md` alone, with the plan-gate body kept in the skill's `references/` or a project skill.
 
 People install it with:
 

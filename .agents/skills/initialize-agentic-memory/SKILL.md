@@ -85,6 +85,9 @@ Creating a file counts as a change. Include new files in the plan:
 - `AGENTS.md`, if it is missing or if it must gain a short pointer section for the new layout
 - `docs/index.md`, when any doc will live under `docs/`
 - `.cursor/rules/agentic-memory.mdc`, only on the Cursor path
+- `SCRATCHPAD.md`, only when the project already keeps a working checklist or the user asks for one
+- `memory/gotchas.md`, only when `memory/` is in the plan or the project already records resolved roadblocks
+- `.cursor/rules/plan-gate.mdc`, only on the Cursor path when the user wants a plan-before-implement gate or an existing always-on plan protocol should move off the hot path. Body from [references/plan-gate.md](references/plan-gate.md). Keep `alwaysApply` false.
 
 Do not rewrite the body of a user's existing document as part of the plan. Moves and new instruction files only.
 
@@ -103,15 +106,17 @@ After a clear yes:
 1. Create destination directories that the plan needs.
 2. Move files. If the destination exists and is not the same file, stop and ask. Do not overwrite.
 3. Leave a one-line pointer at an old path only when something outside the repo is likely to still link there. Do not leave a second copy of the content.
-4. Write or update `AGENTS.md` so it is the short orientation file in [references/layout.md](references/layout.md). Point at the indexes. Do not paste the docs into it.
+4. Write or update `AGENTS.md` so it is the short orientation file in [references/layout.md](references/layout.md). Point at the indexes, and at scratchpad / reflection / plan-gate only when those files exist. Do not paste the docs or the full plan-gate protocol into it.
 5. On the Cursor path, write `.cursor/rules/agentic-memory.mdc` from [references/cursor-rule.md](references/cursor-rule.md). Set `globs` to the memory paths that exist after the move. Keep `alwaysApply` false.
-6. On any other path, do not create `.cursor/rules/`. `AGENTS.md` is the behavior file.
-7. Report what moved and what was created.
+6. On the Cursor path, if the plan includes a plan gate, write `.cursor/rules/plan-gate.mdc` from [references/plan-gate.md](references/plan-gate.md). Keep `alwaysApply` false.
+7. On any other path, do not create `.cursor/rules/`. `AGENTS.md` is the behavior file. Point at [references/plan-gate.md](references/plan-gate.md) from `AGENTS.md` when the plan includes that gate.
+8. Report what moved and what was created.
 
 ## Limits
 
 - Do not delete user content. Archive and decisions stay in git.
 - Do not move secrets, `.env` files, or credentials into `docs/` or `knowledge/`.
-- Do not create the optional folders in the layout (`clients/`, `sources/`, `knowledge/`, `tasks/`, `memory/`) unless the plan has a file that belongs there.
+- Do not create the optional folders or files in the layout (`clients/`, `sources/`, `knowledge/`, `tasks/`, `memory/`, `SCRATCHPAD.md`, `HANDOFF.md`, plan-gate) unless the plan has a file that belongs there or the user asked for that piece.
+- Do not leave generated scratch in the tree as citable evidence. Clear `SCRATCHPAD.md` when the task is done. Promote reflection into `memory/`, `knowledge/`, or `docs/decisions/`.
 - A how-to and a skill must not both contain the same procedure. The skill points at the how-to.
 - Do not continue in a chat that cannot list and edit the project. Stop after telling the user to use Cursor, VS Code, or a local CLI.
