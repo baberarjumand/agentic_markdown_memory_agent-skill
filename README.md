@@ -1,4 +1,4 @@
-# initialize-agentic-memory
+# agentic_markdown_memory_agent-skill
 
 [![skills.sh](https://skills.sh/b/baberarjumand/agentic_markdown_memory_agent-skill)](https://skills.sh/baberarjumand/agentic_markdown_memory_agent-skill)
 
