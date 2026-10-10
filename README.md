@@ -363,7 +363,7 @@ The agent loads this skill's `name` and `description` first, then `SKILL.md`, th
 | Skill | When to use |
 | --- | --- |
 | `memory-audit` | Check size budgets, broken links, index drift, stale entries, unsafe content |
-| `memory-reflect` | End of a non-trivial task: promote lessons into durable memory (added in a later commit) |
+| `memory-reflect` | End of a non-trivial task: promote lessons into durable memory |
 
 Example prompts:
 
@@ -373,6 +373,10 @@ Use memory-audit. Run the audit script and show errors and warnings.
 
 ```text
 node .agents/skills/memory-audit/scripts/audit.mjs --json --report-tokens
+```
+
+```text
+Use memory-reflect. Save what we learned from this session into project memory.
 ```
 
 ## Repository layout
@@ -389,8 +393,11 @@ agentic_markdown_memory_agent-skill/
 │       └── plan-gate.md
 ├── .agents/skills/memory-audit/
 │   ├── SKILL.md
-│   ├── references/checks.md
+│   ├── references/
 │   └── scripts/audit.mjs
+├── .agents/skills/memory-reflect/
+│   ├── SKILL.md
+│   └── references/
 └── docs/research/
     ├── README.md
     ├── FINDINGS.md
