@@ -346,6 +346,23 @@ The agent loads this skill's `name` and `description` first, then `SKILL.md`, th
 
 ---
 
+## Companion skills
+
+| Skill | When to use |
+| --- | --- |
+| `memory-audit` | Check size budgets, broken links, index drift, stale entries, unsafe content |
+| `memory-reflect` | End of a non-trivial task: promote lessons into durable memory (added in a later commit) |
+
+Example prompts:
+
+```text
+Use memory-audit. Run the audit script and show errors and warnings.
+```
+
+```text
+node .agents/skills/memory-audit/scripts/audit.mjs --json --report-tokens
+```
+
 ## Repository layout
 
 ```text
@@ -358,6 +375,10 @@ agentic_markdown_memory_agent-skill/
 │       ├── practices.md
 │       ├── cursor-rule.md
 │       └── plan-gate.md
+├── .agents/skills/memory-audit/
+│   ├── SKILL.md
+│   ├── references/checks.md
+│   └── scripts/audit.mjs
 └── docs/research/
     ├── README.md
     ├── FINDINGS.md

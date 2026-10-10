@@ -112,7 +112,7 @@ After a clear yes:
 5. On the Cursor path, write `.cursor/rules/agentic-memory.mdc` from the fenced template in [references/cursor-rule.md](references/cursor-rule.md). Append optional plan-gate lines only when the plan includes a plan gate. Set `globs` to the memory paths that exist after the move. Keep `alwaysApply` false.
 6. On the Cursor path, if the plan includes a plan gate, write `.cursor/rules/plan-gate.mdc` from [references/plan-gate.md](references/plan-gate.md). Keep `alwaysApply` false.
 7. On any other path, do not create `.cursor/rules/`. `AGENTS.md` is the behavior file. Point at [references/plan-gate.md](references/plan-gate.md) from `AGENTS.md` when the plan includes that gate.
-8. Report what moved and what was created.
+8. Report what moved and what was created. Mention that `memory-audit` can check the layout later if that companion skill is installed.
 
 ## Limits
 
