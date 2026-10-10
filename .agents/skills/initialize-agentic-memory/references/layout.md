@@ -6,9 +6,11 @@ Use this when proposing a structure. Drop a directory that has no file to put in
 .
 ├── AGENTS.md
 ├── README.md
-├── CLAUDE.md
+├── CLAUDE.md                          (optional)
 ├── .agents/skills/<name>/SKILL.md
 ├── .agents/skills/<name>/references/<topic>.md
+├── .cursor/rules/agentic-memory.mdc   (Cursor)
+├── .cursor/rules/plan-gate.mdc        (optional)
 ├── docs/index.md
 ├── docs/tutorials/
 ├── docs/how-to/
@@ -20,23 +22,37 @@ Use this when proposing a structure. Drop a directory that has no file to put in
 ├── knowledge/log.md
 ├── knowledge/<concept>.md
 ├── sources/<source-id>.md
-└── tasks/001-short-title.md
+├── tasks/001-short-title.md
+└── memory/                            (optional)
+    ├── MEMORY.md
+    ├── gotchas.md
+    └── <topic>.md
 ```
 
-Outside the shared tree:
+Local (optional, gitignored):
 
 ```text
 CLAUDE.local.md
 SCRATCHPAD.md
 HANDOFF.md
-memory/MEMORY.md
-memory/gotchas.md
-memory/<topic>.md
 ```
 
 `clients/<name>/` only when one repo serves more than one client. Load one client per run.
 
-On Cursor, an optional on-demand rule may exist at `.cursor/rules/plan-gate.mdc` from [plan-gate.md](plan-gate.md). Do not create it empty. Create it when the user wants a plan-before-implement gate, or when the repo already has a similar always-on rule that should move off the hot path.
+In a monorepo, a package may have its own `AGENTS.md` holding only that package's commands and constraints. The root file stays shared and small. Whether the nearest file wins is tool-specific and unverified; see `tool-notes.md` when present.
+
+On Cursor, an optional on-demand rule may exist at `.cursor/rules/plan-gate.mdc` from [plan-gate.md](plan-gate.md). Do not create it empty. Create it only when the user opted into the plan gate. No other generated file may refer to it unless that file exists.
+
+## Shared vs local
+
+| Path | Committed? | Why |
+| --- | --- | --- |
+| `AGENTS.md`, `docs/`, `knowledge/`, `sources/`, `tasks/`, `.agents/skills/`, `.cursor/rules/` | Yes | Shared project memory |
+| `memory/gotchas.md`, `memory/<topic>.md` | Yes (default) | Durable lessons help every contributor. Owner may gitignore. |
+| `memory/MEMORY.md` | Yes (default) | Index for the topic files. Owner may gitignore if it is personal. |
+| `CLAUDE.local.md`, `SCRATCHPAD.md`, `HANDOFF.md` | No, gitignored | Personal or short-lived |
+
+The init plan may include an opt-in row to append these local paths to `.gitignore` (append missing lines only; never overwrite an existing `.gitignore`).
 
 ## Purpose and when each path is read
 
@@ -56,45 +72,25 @@ On Cursor, an optional on-demand rule may exist at `.cursor/rules/plan-gate.mdc`
 | `docs/decisions/0001-short-title.md` | One decision. Status, date, choice, why, consequences, `superseded_by`. Number never reused. | Outcome when a task depends on it. Debate only when revisiting it. |
 | `docs/archive/YYYY-MM-DD/` | Retired pages. Status `archived`. | Only for a historical question. |
 | `knowledge/index.md` | Catalog of synthesized pages. One line each. | When the task needs current belief. |
-| `knowledge/<concept>.md` | Current synthesis. Labeled claims. Citations into `sources/`. No copied live values. | When its index line matches. |
+| `knowledge/<concept>.md` | Current synthesis. See Knowledge page conventions. | When its index line matches. |
 | `knowledge/log.md` | Append-only ingest, query, and lint record. Date headings. | The tail, when the task needs recent changes. |
 | `sources/<source-id>.md` | Immutable source record. | When a knowledge claim must be checked. |
 | `tasks/001-short-title.md` | One unit of work. Status in frontmatter, not the filename. | The selected task only. |
 | `SCRATCHPAD.md` | Current-task checklist and immediate next steps. Heavily edited. Cleared when the task is done. Never cited as evidence. | When the task is in progress. Not always-on. |
 | `HANDOFF.md` | Next session: decisions, open problems, files just touched. Remove after folding into `knowledge/` or `decisions/`. | Start of the following session only. |
-| `memory/MEMORY.md` | Index of notes the agent wrote. About the first 200 lines. Not facts already in the repo. | Head of the file, for that person. |
-| `memory/gotchas.md` | Durable roadblocks and how they were fixed. So a later agent does not pay the same tokens again. | When the task touches a domain that has hit walls before, or after reflection. |
+| `memory/MEMORY.md` | Index of notes the agent wrote. About the first 200 lines (tool-specific, unverified). Not facts already in the repo. | Head of the file, for that person. |
+| `memory/gotchas.md` | Durable roadblocks and how they were fixed. | When the task touches a domain that has hit walls before, or after reflection. |
 | `memory/<topic>.md` | Detail behind one memory line. | When the index line matches. |
 
 `sources/` and `knowledge/` appear together. `tasks/` appears when work is handed to an agent as a file. `memory/` appears when the tool does not already keep an agent-written memory index outside the repo. `SCRATCHPAD.md` appears when the agent needs a working checklist that is not a `tasks/` file. `HANDOFF.md` appears when a session must continue in a fresh chat.
 
-## Scratchpad versus handoff versus task
+Runtime practice (scratchpad vs handoff, reflection, phrasing) lives in [practices.md](practices.md).
 
-| File | Job | End of life |
-|---|---|---|
-| `SCRATCHPAD.md` | Checklist for the task in this session | Clear completed items as you go. Wipe or reset when the task is done. Do not archive. |
-| `HANDOFF.md` | Bridge into the next session | Fold durable parts into `knowledge/`, `docs/decisions/`, or `memory/`, then delete. |
-| `tasks/001-….md` | A unit of work that may outlive one session | Status moves to `done`. File stays unless the project archives tasks. |
+## Knowledge page conventions
 
-Do not log line-by-line edits into any of these. Reflection produces memory; activity logs produce noise.
-
-## End-of-session reflection
-
-When a non-trivial task finishes, or before starting a fresh session that must continue the work, answer only these questions and write the answers where they belong:
-
-1. Where was the friction?
-2. What repo-specific fact was missing at the start?
-3. What lesson should survive into later sessions?
-
-Promote answers into `memory/gotchas.md`, `memory/<topic>.md`, `docs/decisions/`, or `knowledge/` as appropriate. Update the matching index line in the same change. Then clear `SCRATCHPAD.md` (and fold or remove `HANDOFF.md` if the next session no longer needs it).
-
-Do not append step-by-step code edits. Do not leave generated scratch in the tree as if it were evidence.
-
-## Instructions versus knowledge phrasing
-
-- Constraints that must hold in a Cursor rule or `AGENTS.md`: imperative. Example: `ALWAYS store JWT in HTTP-only cookies. NEVER use localStorage.`
-- Current belief in `knowledge/`: descriptive synthesis with citations. Example: `Auth uses JWT; refresh is at /api/refresh.` Cite `sources/` or `file:line`.
-- Do not migrate wiki pages wholesale into always-on or glob rules. That turns belief into standing prompt cost.
+- **Labeled claims.** Each claim line starts with one label: `[verified]` (checked against code or a source, with a citation), `[inferred]` (reasoned from cited sources, state the reasoning in one clause), `[unverified]` (reported but not checked).
+- **Citations.** A citation is a link to `sources/<id>.md` or a `path/to/file.ext:LINE` reference.
+- **No copied live values.** Do not copy values that change (versions, prices, counts, dashboard numbers, environment values). Link to where the value is read.
 
 ## AGENTS.md shape
 
@@ -102,11 +98,11 @@ Keep it near 100 lines. Sections:
 
 1. Commands (exact invocations).
 2. Where to look: `docs/index.md`, `knowledge/index.md`, `docs/decisions/`, `tasks/`, `SCRATCHPAD.md`, `memory/MEMORY.md`, `memory/gotchas.md` (only paths that exist).
-3. Load rule: match the index trigger and status. Open that file. Do not open other clients, drafts, the archive, or a full scratchpad history unless the task says so.
-4. Write-back: update the page, the index line, and a decision or log entry in the same change.
-5. Before non-trivial work: for a new module, schema change, auth, money, migration, or anything with real blast radius, produce Goal, Blocking questions (0–3 with recommended defaults), Assumptions (falsifiable), and Plan, then wait. A typo, rename, or change under about 20 lines with one obvious form: just do it. Point at `.cursor/rules/plan-gate.mdc` or [plan-gate.md](plan-gate.md) when that file exists; do not paste the full protocol into `AGENTS.md`.
+3. Load rule: copy block `load-rule` from [practices.md](practices.md).
+4. Write-back: update the page, the index line, and a decision or log entry in the same change. (Task 3 adds block `write-rules` here.)
+5. Before non-trivial work (include only if the user opted into the plan gate): one line that points at the plan gate file and names the triggers (new module, schema change, auth, money, migration) and the skip cases (typo, rename, tiny edit). Do not restate the protocol. Block: `plan-pointer` in practices.md.
 6. Done: how to know the task is finished. Include clearing `SCRATCHPAD.md` when it was used.
 7. Blocked: what to do instead of inventing a path.
-8. Reflection: when a non-trivial task ends, run the three questions above and promote before wiping scratch.
+8. Reflection: include block `reflection` from practices.md (single copy).
 
 Point at files. Do not paste them.

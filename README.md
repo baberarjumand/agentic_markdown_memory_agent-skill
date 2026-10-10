@@ -355,6 +355,7 @@ agentic_markdown_memory_agent-skill/
 │   ├── SKILL.md
 │   └── references/
 │       ├── layout.md
+│       ├── practices.md
 │       ├── cursor-rule.md
 │       └── plan-gate.md
 └── docs/research/

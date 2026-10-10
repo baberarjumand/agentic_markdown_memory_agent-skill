@@ -1,5 +1,7 @@
 # Plan gate (optional on-demand rule)
 
+Only create this file when the user opted into the plan gate. No other generated file may refer to it unless it exists.
+
 Use this when the user wants a plan-before-implement gate. On Cursor, write it to `.cursor/rules/plan-gate.mdc` with the frontmatter below. Keep `alwaysApply` false so typo fixes and tiny edits do not pay for the ceremony.
 
 On non-Cursor agents, put a one-line pointer in `AGENTS.md` under "Before non-trivial work" and keep this file under the skill's `references/`, or copy the body into a project skill. Do not paste the full protocol into the always-on file.
