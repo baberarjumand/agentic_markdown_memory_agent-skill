@@ -41,7 +41,7 @@ HANDOFF.md
 
 `clients/<name>/` only when one repo serves more than one client. Load one client per run.
 
-In a monorepo, a package may have its own `AGENTS.md` holding only that package's commands and constraints. The root file stays shared and small. Whether the nearest file wins is tool-specific and unverified; see `tool-notes.md` when present.
+In a monorepo, a package may have its own `AGENTS.md` holding only that package's commands and constraints. The root file stays shared and small. Nested precedence: Cursor applies subdirectory `AGENTS.md` when working there; Copilot uses nearest-wins. Other tools: see [tool-notes.md](tool-notes.md).
 
 On Cursor, an optional on-demand rule may exist at `.cursor/rules/plan-gate.mdc` from [plan-gate.md](plan-gate.md). Do not create it empty. Create it only when the user opted into the plan gate. No other generated file may refer to it unless that file exists.
 

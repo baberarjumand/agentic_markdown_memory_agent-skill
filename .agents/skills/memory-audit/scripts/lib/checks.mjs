@@ -114,6 +114,12 @@ export function runChecks(ctx) {
         message: `AGENTS.md has ${lines} lines (budget ${options.maxAgentsLines || 120})`,
       });
     }
+    push({
+      id: "always-on-cost",
+      severity: "info",
+      file: agentsRel,
+      message: `Approximate always-on cost available via --report-tokens (${contents.get(agentsRel).length} chars in AGENTS.md)`,
+    });
   }
 
   const titles = new Map();
