@@ -385,7 +385,9 @@ agentic_markdown_memory_agent-skill/
 │       ├── layout.md
 │       ├── practices.md
 │       ├── cursor-rule.md
-│       └── plan-gate.md
+│       ├── plan-gate.md
+│       ├── migration-safety.md
+│       └── tool-notes.md
 ├── .agents/skills/memory-audit/
 │   ├── SKILL.md
 │   ├── references/

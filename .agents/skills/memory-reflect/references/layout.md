@@ -80,7 +80,7 @@ The init plan may include an opt-in row to append these local paths to `.gitigno
 | `tasks/001-short-title.md` | One unit of work. Status in frontmatter, not the filename. | The selected task only. |
 | `SCRATCHPAD.md` | Current-task checklist and immediate next steps. Heavily edited. Cleared when the task is done. Never cited as evidence. | When the task is in progress. Not always-on. |
 | `HANDOFF.md` | Next session: decisions, open problems, files just touched. Remove after folding into `knowledge/` or `decisions/`. | Start of the following session only. |
-| `memory/MEMORY.md` | Index of notes the agent wrote. About the first 200 lines (tool-specific, unverified). Not facts already in the repo. | Head of the file, for that person. |
+| `memory/MEMORY.md` | Index of notes the agent wrote. Claude Code auto-memory loads about the first 200 lines or 25 KB (verified in tool-notes). Not facts already in the repo. | Head of the file, for that person. |
 | `memory/gotchas.md` | Durable roadblocks and how they were fixed. | When the task touches a domain that has hit walls before, or after reflection. |
 | `memory/<topic>.md` | Detail behind one memory line. | When the index line matches. |
 

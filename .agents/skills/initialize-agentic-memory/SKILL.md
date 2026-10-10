@@ -55,7 +55,7 @@ Creating a file counts as a change. Include when needed:
 - `.cursor/rules/agentic-memory.mdc` (Cursor path)
 - `SCRATCHPAD.md`, `memory/gotchas.md` when warranted
 - `.cursor/rules/plan-gate.mdc` only when the user opted into the plan gate ([references/plan-gate.md](references/plan-gate.md))
-- Opt-in pointer create/update rows for existing tool files (see tool-notes when present)
+- Opt-in interop pointers (default off): if `CLAUDE.md`, `GEMINI.md`, or `.github/copilot-instructions.md` exists with content, propose an opt-in `update` row adding a one-line pointer to `AGENTS.md` (never merge/rewrite/delete existing content). If absent, offer opt-in `create` (default off). Use `@AGENTS.md` import syntax only when [references/tool-notes.md](references/tool-notes.md) marks it verified (Claude Code). Otherwise: `See AGENTS.md for project memory and rules.`
 
 Do not rewrite bodies of existing user documents. Moves and new instruction files only. Frontmatter rows: merge missing keys only; never overwrite existing keys; flag derived `description` for review.
 
