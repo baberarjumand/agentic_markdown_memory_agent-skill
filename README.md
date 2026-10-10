@@ -1,5 +1,40 @@
 # agentic_markdown_memory_agent-skill
 
+<!-- BEGIN TOC (generated, do not edit by hand) -->
+**Contents**
+
+- [Features](#features)
+- [Quick start](#quick-start)
+  - [Option A — Install via `npx skills` (recommended)](#option-a-install-via-npx-skills-recommended)
+  - [Option B — Clone the repo](#option-b-clone-the-repo)
+- [Recommended environment](#recommended-environment)
+- [Use with Cursor](#use-with-cursor)
+- [Use with VS Code](#use-with-vs-code)
+- [Use with Claude](#use-with-claude)
+  - [Claude Code](#claude-code)
+  - [Claude.ai (web)](#claudeai-web)
+- [Use with ChatGPT](#use-with-chatgpt)
+  - [ChatGPT (web)](#chatgpt-web)
+  - [Codex CLI](#codex-cli)
+- [Use with Gemini](#use-with-gemini)
+  - [Gemini CLI](#gemini-cli)
+  - [Gemini web](#gemini-web)
+- [Use with Grok](#use-with-grok)
+  - [Grok coding CLI](#grok-coding-cli)
+  - [Grok web](#grok-web)
+- [Use with DeepSeek](#use-with-deepseek)
+  - [DeepSeek Chat](#deepseek-chat)
+  - [DeepSeek Harness or another local CLI](#deepseek-harness-or-another-local-cli)
+- [Usage](#usage)
+  - [Example prompts](#example-prompts)
+- [How it works](#how-it-works)
+- [Companion skills](#companion-skills)
+- [Repository layout](#repository-layout)
+- [Security](#security)
+- [FAQ](#faq)
+- [About the Author](#about-the-author)
+<!-- END TOC -->
+
 [![skills.sh](https://skills.sh/b/baberarjumand/agentic_markdown_memory_agent-skill)](https://skills.sh/baberarjumand/agentic_markdown_memory_agent-skill)
 
 An [Agent Skills](https://agentskills.io/) package that sets up a markdown memory layout for a project. A short `AGENTS.md` stays in every session. Docs, decisions, knowledge pages, and tasks load only when a task needs them.
@@ -24,29 +59,6 @@ npx skills add baberarjumand/agentic_markdown_memory_agent-skill --list
 
 Repo: [github.com/baberarjumand/agentic_markdown_memory_agent-skill](https://github.com/baberarjumand/agentic_markdown_memory_agent-skill)
 
----
-
-## Table of Contents
-
-- [Features](#features)
-- [Quick start](#quick-start)
-- [Recommended environment](#recommended-environment)
-- [Use with Cursor](#use-with-cursor)
-- [Use with VS Code](#use-with-vs-code)
-- [Use with Claude](#use-with-claude)
-- [Use with ChatGPT](#use-with-chatgpt)
-- [Use with Gemini](#use-with-gemini)
-- [Use with Grok](#use-with-grok)
-- [Use with DeepSeek](#use-with-deepseek)
-- [Usage](#usage)
-- [How it works](#how-it-works)
-- [Repository layout](#repository-layout)
-- [Security](#security)
-- [FAQ](#faq)
-- [About the Author](#about-the-author)
-
----
-
 ## Features
 
 | Feature | Description |
@@ -60,7 +72,7 @@ Repo: [github.com/baberarjumand/agentic_markdown_memory_agent-skill](https://git
 | **Local filesystem only** | If the agent cannot list and edit the project, it says so and stops |
 | **Research-backed** | Layout comes from the notes in [`docs/research/`](docs/research/README.md). The synthesis is [`docs/research/FINDINGS.md`](docs/research/FINDINGS.md) |
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -109,7 +121,7 @@ cd agentic_markdown_memory_agent-skill
 
 The skill is at `.agents/skills/initialize-agentic-memory/`. Open that folder's project in Cursor or point your CLI at the clone, then invoke `/initialize-agentic-memory` **in the repository you want to organize**, not only inside this skill repo.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -129,7 +141,7 @@ That setup can scan the tree, show a move plan, and move files after you confirm
 
 Claude.ai, ChatGPT on the web, Gemini web, Grok web, and DeepSeek Chat do not have your project filesystem, so the skill stops there. Install it in Cursor, VS Code, or a local CLI (see the sections below) and run it on the repository you want to organize.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -155,7 +167,7 @@ On Windows, add `--copy` if the install reports a symlink error.
 
 This repo already contains the skill at `.agents/skills/initialize-agentic-memory/` for [Agent Skills](https://agentskills.io/) discovery.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -171,7 +183,7 @@ Use an agent mode that can edit workspace files. Ask it to run initialize-agenti
 
 If the VS Code chat cannot change files on disk, the skill stops.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -197,7 +209,7 @@ Claude Code writes `AGENTS.md`. It does not write a Cursor rule unless you say y
 
 Claude.ai has no project filesystem. The skill tells you to use Claude Code, Cursor, or VS Code, and stops.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -219,7 +231,7 @@ Open the target repo and ask:
 Use initialize-agentic-memory. Ask whether to analyze this repo. Show a move plan. Wait for a final yes before moving files. Write AGENTS.md.
 ```
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -243,7 +255,7 @@ Open the target project and ask it to run initialize-agentic-memory. It writes `
 
 Gemini on the web cannot list or edit the repo. The skill stops. Use Gemini CLI.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -265,7 +277,7 @@ Use initialize-agentic-memory. Ask me before scanning. Show the move plan. Write
 
 Grok on the web cannot change the project on disk. The skill stops. Use the Grok CLI.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -285,7 +297,7 @@ npx skills add baberarjumand/agentic_markdown_memory_agent-skill --copy -g -y
 
 Run it on the target repo. Agents that scan `.agents/skills/` or `.dsh/skills/` can load it from a clone of this repo as well.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -312,7 +324,7 @@ Use initialize-agentic-memory. I want you to analyze this repo before proposing 
 Don't scan the repo. Show the default memory layout and ask me before moving anything.
 ```
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -342,7 +354,7 @@ Ask: analyze the current project?
 
 The agent loads this skill's `name` and `description` first, then `SKILL.md`, then `references/layout.md`, `references/cursor-rule.md`, and `references/plan-gate.md` only when it needs them ([specification](https://agentskills.io/specification)).
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -390,7 +402,7 @@ Zip `.agents/skills/initialize-agentic-memory/` for Claude.ai or ChatGPT skill u
 
 Suggested GitHub topics: `agent-skills`, `skills-sh`, `cursor`, `claude-code`, `markdown`, `context-engineering`.
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -400,7 +412,7 @@ This skill's instructions tell an agent to move and create files in whatever rep
 
 `npx skills add` installs instructions another agent will follow. Review [SKILL.md](.agents/skills/initialize-agentic-memory/SKILL.md) before you install. Prefer `npx skills add baberarjumand/agentic_markdown_memory_agent-skill --list` first. There is no hosted service and no install script beyond the public [skills CLI](https://www.skills.sh/docs/cli).
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -433,7 +445,7 @@ So it does not scan or reorganize the repo before you agree, and so the last yes
 **Windows?**
 `npx skills add baberarjumand/agentic_markdown_memory_agent-skill --copy -g -y`
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
 
 ---
 
@@ -447,4 +459,4 @@ I am Baber Arjumand and I built **initialize-agentic-memory** so a project can k
 - GitHub: [github.com/baberarjumand](https://github.com/baberarjumand)
 - LinkedIn: [linkedin.com/in/baberarjumand](https://www.linkedin.com/in/baberarjumand/)
 
-[↑ Back to top](#table-of-contents)
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
