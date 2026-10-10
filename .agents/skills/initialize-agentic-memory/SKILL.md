@@ -76,7 +76,9 @@ If yes, scan the project using the same skip list as Step 2a, then continue at S
 
 ## Step 3. Show the move plan
 
-Build a plan. Do not apply it.
+Run preflight from [references/migration-safety.md](references/migration-safety.md) (optional: `node scripts/preflight.mjs`). On a dirty git tree, stop before showing the plan unless the user explicitly acknowledges. On a non-git repo, warn about rollback and require acknowledgement at apply.
+
+Build a plan. Do not apply it. Follow migration-safety for reference-rewrite rows and the opt-in `.gitignore` append row.
 
 For each existing knowledge or instruction file, name the current path, the destination, and why. Group files that stay where they are. List files you will not touch: source code, lockfiles, secrets, `.git`, and dependencies.
 
@@ -103,16 +105,16 @@ Ask, then wait:
 
 If the user says anything other than a clear yes, stop. Do not move files.
 
-After a clear yes:
+After a clear yes (details in [references/migration-safety.md](references/migration-safety.md)):
 
 1. Create destination directories that the plan needs.
-2. Move files. If the destination exists and is not the same file, stop and ask. Do not overwrite.
-3. Leave a one-line pointer at an old path only when something outside the repo is likely to still link there. Do not leave a second copy of the content.
+2. Move files with `git mv` when tracked, plain move when untracked. If the destination exists and is not the same file, stop and ask. Do not overwrite.
+3. Apply approved "references to update" rows only. Leave a one-line pointer at an old path only when something outside the repo still links there. Do not leave a second copy of the content.
 4. Write or update `AGENTS.md` so it is the short orientation file in [references/layout.md](references/layout.md). Copy blocks from [references/practices.md](references/practices.md) as that shape requires (`load-rule`, `write-rules`, `reflection`, and `plan-pointer` only if the plan gate exists). Point at the indexes and at scratchpad only when those files exist. Do not paste the docs or the full plan-gate protocol into it.
 5. On the Cursor path, write `.cursor/rules/agentic-memory.mdc` from the fenced template in [references/cursor-rule.md](references/cursor-rule.md). Append optional plan-gate lines only when the plan includes a plan gate. Set `globs` to the memory paths that exist after the move. Keep `alwaysApply` false.
 6. On the Cursor path, if the plan includes a plan gate, write `.cursor/rules/plan-gate.mdc` from [references/plan-gate.md](references/plan-gate.md). Keep `alwaysApply` false.
 7. On any other path, do not create `.cursor/rules/`. `AGENTS.md` is the behavior file. Point at [references/plan-gate.md](references/plan-gate.md) from `AGENTS.md` when the plan includes that gate.
-8. Report what moved and what was created. Mention that `memory-audit` can check the layout later if that companion skill is installed.
+8. Verify destinations, pointer stubs, and links per migration-safety. Report what moved, what was created, which references changed, and a user-runnable rollback command. Never run a destructive rollback yourself. Mention that `memory-audit` can check the layout later if installed.
 
 ## Limits
 

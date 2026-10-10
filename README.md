@@ -415,7 +415,9 @@ Suggested GitHub topics: `agent-skills`, `skills-sh`, `cursor`, `claude-code`, `
 
 ## Security
 
-This skill's instructions tell an agent to move and create files in whatever repository you point it at. It is supposed to wait for two yes answers and a final confirmation. Read the plan before you say yes. It must not move `.env` files, credentials, `.git`, or dependency folders.
+This skill's instructions tell an agent to move and create files in whatever repository you point it at. It waits for confirmation before scanning and again before applying. Read the plan before you say yes. It must not move `.env` files, credentials, `.git`, or dependency folders.
+
+Safer migration: preflight checks git cleanliness (or warns when there is no git), prefers `git mv` for tracked files, plans reference rewrites, and reports a rollback command for you to run. The agent must not run a destructive rollback. Injection and secret heuristics in `memory-audit` are heuristics, not guarantees.
 
 `npx skills add` installs instructions another agent will follow. Review [SKILL.md](.agents/skills/initialize-agentic-memory/SKILL.md) before you install. Prefer `npx skills add baberarjumand/agentic_markdown_memory_agent-skill --list` first. There is no hosted service and no install script beyond the public [skills CLI](https://www.skills.sh/docs/cli).
 
