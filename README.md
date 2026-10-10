@@ -64,6 +64,10 @@ Repo: [github.com/baberarjumand/agentic_markdown_memory_agent-skill](https://git
 | Feature | Description |
 | --- | --- |
 | **Two confirmation gates** | Gate 1: scan read-only and build a plan. Gate 2: apply. Dry-run stops after the plan with no writes |
+| **Safer migration** | Preflight, `git mv` for tracked files, planned reference rewrites, user-owned rollback |
+| **Metadata schema** | Shared frontmatter and generated index line format for docs, decisions, knowledge, tasks |
+| **Companion skills** | `memory-audit` (budgets, drift, unsafe content) and `memory-reflect` (end-of-session write-back) |
+| **Scoped TOC** | Generated TOCs only for long eligible files; never on `AGENTS.md` |
 | **Existing files stay intact** | Reports where knowledge already lives and proposes destinations. Does not overwrite a file that is already there |
 | **Default layout** | `AGENTS.md`, `docs/` (tutorials, how-to, reference, explanation, decisions, archive), `knowledge/`, `sources/`, `tasks/`, optional `SCRATCHPAD.md` / `memory/gotchas.md` — only what the project needs |
 | **Cursor rule** | When Cursor is in use, writes `.cursor/rules/agentic-memory.mdc` scoped to memory files. It points at `AGENTS.md` and is not always-on. Optional on-demand `plan-gate.mdc` for plan-before-implement |
@@ -395,11 +399,16 @@ agentic_markdown_memory_agent-skill/
 ├── .agents/skills/memory-reflect/
 │   ├── SKILL.md
 │   └── references/
-└── docs/research/
-    ├── README.md
-    ├── FINDINGS.md
-    ├── analyzed-links/
-    └── searches/
+├── tests/
+├── .github/workflows/validate.yml
+├── CHANGELOG.md
+└── docs/
+    ├── improvements_v1/IMPROVEMENTS.md
+    └── research/
+        ├── README.md
+        ├── FINDINGS.md
+        ├── analyzed-links/
+        └── searches/
 ```
 
 Zip `.agents/skills/initialize-agentic-memory/` for Claude.ai or ChatGPT skill upload.

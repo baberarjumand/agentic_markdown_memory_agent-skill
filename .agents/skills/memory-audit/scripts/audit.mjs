@@ -17,6 +17,7 @@ const SKIP_DIRS = new Set([
   ".next",
   "coverage",
   ".cache",
+  "tests",
 ]);
 
 function parseArgs(argv) {

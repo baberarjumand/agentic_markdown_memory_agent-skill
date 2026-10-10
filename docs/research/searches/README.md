@@ -1,5 +1,15 @@
 # Search sweep
 
+<!-- BEGIN TOC (generated, do not edit by hand) -->
+**Contents**
+
+- [Core standards](#core-standards)
+- [Knowledge systems](#knowledge-systems)
+- [Agents](#agents)
+- [Project docs](#project-docs)
+- [Technical depth](#technical-depth)
+<!-- END TOC -->
+
 Targeted searches run on 2026-09-29. The search tool returns a handful of highlighted results per query, not a full page of twenty. Each phrase was searched, and several were searched again with a wider wording. Every URL below was looked at. A full note exists when the page added a practice. "Already" means the URL is an earlier numbered note. "Logged" means the useful idea is in this file and did not earn its own note.
 
 ## Core standards

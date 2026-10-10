@@ -1,5 +1,23 @@
 # Findings
 
+<!-- BEGIN TOC (generated, do not edit by hand) -->
+**Contents**
+
+- [The picture](#the-picture)
+- [What is loaded, and when](#what-is-loaded-and-when)
+- [What each kind of file is for](#what-each-kind-of-file-is-for)
+- [Suggested project structure](#suggested-project-structure)
+- [How a file is written](#how-a-file-is-written)
+- [How the set stays true](#how-the-set-stays-true)
+- [Knowledge versus execution](#knowledge-versus-execution)
+- [Authority](#authority)
+- [Where the sources disagree](#where-the-sources-disagree)
+- [How this skill is packaged](#how-this-skill-is-packaged)
+- [What the skill does not require](#what-the-skill-does-not-require)
+- [What an agent following this skill does](#what-an-agent-following-this-skill-does)
+- [v2 decisions](#v2-decisions)
+<!-- END TOC -->
+
 Synthesized 2026-09-29 from notes [000](analyzed-links/000_ai-powered-markdown-knowledge-base.md)–[026](analyzed-links/026_enforceable-markdown-style.md) and the [search sweep](searches/README.md).
 
 This is the working picture for the skill. A source note is the evidence. This file is the conclusion.
@@ -285,3 +303,18 @@ Wikilinks, block references, or any syntax a CommonMark reader cannot follow ([0
 6. Call a tool to act. Do not load a tool catalog to learn a convention.
 7. Write the result back: update the page, the index line, and a log or decision entry in the same change. Do not leave the synthesis in the chat.
 8. Keep the always-on files short. Put a new rule in the narrowest file that is true. Delete a line before adding one.
+
+## v2 decisions
+
+One line per Improvements Spec v2 task (why):
+
+1. Split structure from practice and single-source plan-gate/reflection so copies stop drifting.
+2. Define one frontmatter schema and derivable index lines so validation is possible.
+3. Add write-rules and trust/provenance so memory is not a prompt-injection sink.
+4. Add `memory-audit` so size, drift, and unsafe content are measurable.
+5. Add `memory-reflect` so end-of-session promotion is invokable and filtered.
+6. Generate TOCs only over a line/heading threshold so short and always-on files stay lean.
+7. Safer migration (preflight, `git mv`, reference rewrite, user rollback) to avoid silent repo damage.
+8. Two gates plus dry-run to cut confirmation fatigue without losing control.
+9. Dated `tool-notes.md` so tool claims stay verified or explicitly unverified.
+10. Fixtures, validators, and CI so agent-driven regressions are cheap to catch.

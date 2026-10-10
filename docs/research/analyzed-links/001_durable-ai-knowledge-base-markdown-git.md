@@ -1,5 +1,15 @@
 # I Built a Durable AI Knowledge Base with Markdown and Git
 
+<!-- BEGIN TOC (generated, do not edit by hand) -->
+**Contents**
+
+- [What the source recommends](#what-the-source-recommends)
+- [Do](#do)
+- [Don't](#dont)
+- [Worth carrying into the skill](#worth-carrying-into-the-skill)
+- [Token implications](#token-implications)
+<!-- END TOC -->
+
 | | |
 |---|---|
 | Source | [I Built a Durable AI Knowledge Base with Markdown and Git](https://changyou.medium.com/i-built-a-durable-ai-knowledge-base-with-markdown-and-git-054191f71975) |
