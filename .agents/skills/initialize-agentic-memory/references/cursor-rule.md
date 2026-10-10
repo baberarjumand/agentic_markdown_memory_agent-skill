@@ -22,6 +22,7 @@ Follow `AGENTS.md`. It is the orientation file. This rule applies when a memory 
 - Prefer imperative phrasing for constraints in rules and `AGENTS.md`. Keep current belief in `knowledge/` as cited synthesis, not as always-on rules.
 - In the same change as a page edit, update that corpus's index line and, when the edit is a decision, the decision record or `knowledge/log.md`.
 - At the end of a non-trivial task, follow the reflection steps in `AGENTS.md`.
+- Follow the write rules in `AGENTS.md`.
 - Do not copy a page into `AGENTS.md` or into this rule.
 - Do not treat this rule as a security check. A hook or a test blocks an action. A sentence does not.
 ```

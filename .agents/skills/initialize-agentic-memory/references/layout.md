@@ -132,7 +132,7 @@ Keep it near 100 lines. Sections:
 1. Commands (exact invocations).
 2. Where to look: `docs/index.md`, `knowledge/index.md`, `docs/decisions/`, `tasks/`, `SCRATCHPAD.md`, `memory/MEMORY.md`, `memory/gotchas.md` (only paths that exist).
 3. Load rule: copy block `load-rule` from [practices.md](practices.md).
-4. Write-back: update the page, the index line, and a decision or log entry in the same change. (Task 3 adds block `write-rules` here.)
+4. Write-back: update the page, the index line, and a decision or log entry in the same change. Include block `write-rules` from [practices.md](practices.md).
 5. Before non-trivial work (include only if the user opted into the plan gate): one line that points at the plan gate file and names the triggers (new module, schema change, auth, money, migration) and the skip cases (typo, rename, tiny edit). Do not restate the protocol. Block: `plan-pointer` in practices.md.
 6. Done: how to know the task is finished. Include clearing `SCRATCHPAD.md` when it was used.
 7. Blocked: what to do instead of inventing a path.
