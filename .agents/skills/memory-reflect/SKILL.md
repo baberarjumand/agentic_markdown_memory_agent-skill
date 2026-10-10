@@ -1,6 +1,8 @@
 ---
 name: memory-reflect
 description: Turns a finished work session into durable markdown memory. Answers three questions (friction, missing repo fact, lesson to keep), filters out secrets and unconfirmed external content, routes each item to the right file, avoids duplicates, handles corrections, updates index lines, and clears the scratchpad. Use at the end of a non-trivial task or when asked to save what was learned.
+metadata:
+  version: "1.1.0"
 ---
 
 # Memory reflect

@@ -7,6 +7,8 @@ description: >
   confirmation. Supports dry-run. Creates a Cursor rule when Cursor is in use,
   otherwise writes AGENTS.md. If there is no local filesystem, the agent tells
   the user and stops. Use only when the user invokes /initialize-agentic-memory.
+metadata:
+  version: "1.1.0"
 disable-model-invocation: true
 ---
 

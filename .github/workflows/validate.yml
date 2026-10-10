@@ -12,7 +12,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Validate skills
-        run: node tests/validate-skills.mjs
-      - name: Run audit fixtures
-        run: node tests/run-audit-fixtures.mjs
+      - name: Validate skills and audit fixtures
+        run: npm test

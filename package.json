@@ -1,0 +1,36 @@
+{
+  "name": "agentic_markdown_memory_agent-skill",
+  "version": "1.1.0",
+  "description": "Agent Skills package for agentic markdown memory: initialize layout, audit, and reflect.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node tests/validate-skills.mjs && node tests/run-audit-fixtures.mjs",
+    "validate": "node tests/validate-skills.mjs",
+    "audit:fixtures": "node tests/run-audit-fixtures.mjs",
+    "sync-references": "node .agents/skills/initialize-agentic-memory/scripts/sync-references.mjs",
+    "sync-references:check": "node .agents/skills/initialize-agentic-memory/scripts/sync-references.mjs --check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baberarjumand/agentic_markdown_memory_agent-skill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/baberarjumand/agentic_markdown_memory_agent-skill/issues"
+  },
+  "homepage": "https://github.com/baberarjumand/agentic_markdown_memory_agent-skill#readme",
+  "keywords": [
+    "agent-skills",
+    "skills-sh",
+    "cursor",
+    "claude-code",
+    "markdown",
+    "context-engineering",
+    "agents-md"
+  ],
+  "author": "Baber Arjumand",
+  "license": "MIT"
+}

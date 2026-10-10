@@ -129,38 +129,24 @@ export function applyToc(fullText, data, body, lineCount, rel) {
       action: "remove",
     };
   }
-  const block = buildTocBlock(body, lineCount);
-  const without = stripToc(body);
-  const lines = without.replace(/\r/g, "").split("\n");
-  let h1 = -1;
-  let inFence = false;
-  for (let i = 0; i < lines.length; i++) {
-    if (/^(```|~~~)/.test(lines[i])) {
-      inFence = !inFence;
-      continue;
-    }
-    if (!inFence && /^#\s+/.test(lines[i])) {
-      h1 = i;
-      break;
-    }
-  }
-  const insertAt = h1 === -1 ? 0 : h1 + 1;
-  const next = [
-    ...lines.slice(0, insertAt),
-    "",
-    block,
-    "",
-    ...lines.slice(insertAt).filter((l, idx) => !(idx === 0 && l === "")),
-  ].join("\n");
-  const normalized = next.replace(/\n{3,}/g, "\n\n");
-  if (normalized === without.replace(/\n{3,}/g, "\n\n") && has) {
+  const block = buildTocBlock(stripToc(body), lineCount);
+  if (has) {
     const current = extractTocBlock(body);
     if (current === block) return { text: fullText, changed: false, action: null };
+    // Keep existing placement (e.g. above Features); only refresh contents
+    const begin = body.indexOf(TOC_BEGIN);
+    const end = body.indexOf(TOC_END, begin) + TOC_END.length;
+    const newBody = body.slice(0, begin) + block + body.slice(end);
+    return {
+      text: rebuild(fullText, newBody),
+      changed: true,
+      action: "update",
+    };
   }
   return {
-    text: rebuild(fullText, insertTocAfterH1(without, block)),
+    text: rebuild(fullText, insertTocAfterH1(body, block)),
     changed: true,
-    action: has ? "update" : "add",
+    action: "add",
   };
 }
 

@@ -5,6 +5,8 @@ Zero npm dependencies. Requires Node.js >= 18.
 ## Validators
 
 ```bash
+npm test
+# or:
 node tests/validate-skills.mjs
 node tests/run-audit-fixtures.mjs
 ```

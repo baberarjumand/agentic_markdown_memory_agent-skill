@@ -1,6 +1,8 @@
 ---
 name: memory-audit
 description: Audits a project's markdown memory (AGENTS.md, docs/, knowledge/, sources/, tasks/, memory/, SCRATCHPAD.md, HANDOFF.md) for size budgets, stale or contradictory entries, broken links, index drift, orphan files, missing frontmatter, unsafe content, and always-on token cost. Reports findings and proposes fixes. Use when asked to check, clean up, or review agent memory, or when AGENTS.md has grown large.
+metadata:
+  version: "1.1.0"
 ---
 
 # Memory audit
