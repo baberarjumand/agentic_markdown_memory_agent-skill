@@ -31,6 +31,7 @@ Repo: [github.com/baberarjumand/agentic_markdown_memory_agent-skill](https://git
 <!-- BEGIN TOC (generated, do not edit by hand) -->
 **Contents**
 
+- [Why use these skills?](#why-use-these-skills)
 - [Features](#features)
 - [Quick start](#quick-start)
   - [Option A — Install via `npx skills` (recommended)](#option-a-install-via-npx-skills-recommended)
@@ -54,6 +55,29 @@ Repo: [github.com/baberarjumand/agentic_markdown_memory_agent-skill](https://git
   - [Use with DeepSeek](#use-with-deepseek)
 - [About the Author](#about-the-author)
 <!-- END TOC -->
+
+## Why use these skills?
+
+Agents stay oriented with less context waste, institutional knowledge survives across sessions, and the memory corpus stays maintainable instead of becoming a dump.
+
+### `initialize-agentic-memory`
+- Sets up a lean always-on context (`AGENTS.md`) so agents don’t load the whole docs tree every turn.
+- Migrates existing notes into a standard layout (`docs/`, `knowledge/`, `tasks/`, etc.) with two confirmation gates and safer moves (`git mv`, preflight, rollback guidance).
+- Leaves existing file bodies intact; proposes destinations instead of overwriting.
+
+### `memory-audit`
+- Catches drift and rot: size budgets, broken links, stale/contradictory entries, orphan files, missing frontmatter, unsafe-content heuristics.
+- Estimates always-on token cost so you can keep `AGENTS.md` cheap.
+- Can regenerate indexes/TOCs; applies nothing without your OK (or use `--check` in CI).
+
+### `memory-reflect`
+- Turns a finished session into durable memory (gotchas, decisions, knowledge) instead of losing scratchpad notes.
+- Filters secrets, noise, and unconfirmed external claims; avoids duplicates and contradictions.
+- Clears the scratchpad so the next session starts clean.
+
+[↑ Back to top](#agentic_markdown_memory_agent-skill)
+
+---
 
 ## Features
 

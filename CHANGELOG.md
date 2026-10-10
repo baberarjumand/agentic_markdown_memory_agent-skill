@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.0 — Improvements Spec v2
+## 1.1.0 Improvements Spec v2
 
 Implemented from `docs/IMPROVEMENTS_v2.md` (one commit per task).
 
