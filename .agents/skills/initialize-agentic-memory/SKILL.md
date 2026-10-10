@@ -91,7 +91,9 @@ Creating a file counts as a change. Include new files in the plan:
 
 Do not rewrite the body of a user's existing document as part of the plan. Moves and new instruction files only.
 
-Show the plan as a table: current path, new path, reason.
+Plan table row types: `move`, `create`, `update`, and opt-in `add frontmatter`. Frontmatter rows: only add a frontmatter block at the top of a file, never rewrite the body; merge missing keys only and never overwrite existing keys; derive `description` from the first heading or paragraph and flag it "needs human review"; set `updated` to today. All files this skill creates itself get frontmatter by default per [references/layout.md](references/layout.md) File metadata. Frontmatter rows are opt-in for existing user files.
+
+Show the plan as a table: current path, new path, reason (and row type when useful).
 
 Ask, then wait:
 

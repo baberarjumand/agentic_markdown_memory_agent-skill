@@ -64,7 +64,7 @@ The init plan may include an opt-in row to append these local paths to `.gitigno
 | `CLAUDE.local.md` | One person's preferences for this repo. Gitignored. | That person's sessions. |
 | `.agents/skills/<name>/SKILL.md` | One procedure. Frontmatter `description` is the trigger. Body under about 500 lines. | Description every session. Body when the task matches. |
 | `.agents/skills/<name>/references/` | Long checklists, templates, rare cases the skill names. | When a step names the file. |
-| `docs/index.md` | One line per doc: link, type, status, when to open it. | After `AGENTS.md`, before a doc body. |
+| `docs/index.md` | Catalog of docs. See Index line format. | After `AGENTS.md`, before a doc body. |
 | `docs/tutorials/` | Learning path, in order. | When the task is to learn the system. |
 | `docs/how-to/` | One task, one outcome. | When the task is "how do I do X". |
 | `docs/reference/` | Exact behavior. | When the task needs a fact. |
@@ -91,6 +91,39 @@ Runtime practice (scratchpad vs handoff, reflection, phrasing) lives in [practic
 - **Labeled claims.** Each claim line starts with one label: `[verified]` (checked against code or a source, with a citation), `[inferred]` (reasoned from cited sources, state the reasoning in one clause), `[unverified]` (reported but not checked).
 - **Citations.** A citation is a link to `sources/<id>.md` or a `path/to/file.ext:LINE` reference.
 - **No copied live values.** Do not copy values that change (versions, prices, counts, dashboard numbers, environment values). Link to where the value is read.
+
+## File metadata
+
+| File type | Required keys | Allowed `status` values | Optional keys |
+| --- | --- | --- | --- |
+| Doc page (tutorials, how-to, reference, explanation) | `description`, `status`, `updated` | `active`, `draft`, `archived` | `origin` |
+| Decision record | `description`, `status`, `date` | `proposed`, `accepted`, `superseded`, `deprecated` | `superseded_by`, `origin` |
+| Knowledge page | `description`, `status`, `updated`, `last_verified` | `active`, `draft`, `archived` | `origin` |
+| Source record | `description`, `captured` (date) | none (immutable) | `origin` |
+| Task | `description`, `status`, `updated` | `todo`, `in-progress`, `blocked`, `done` | none |
+| `memory/gotchas.md`, `memory/<topic>.md` | `description`, `updated` | none | `origin` |
+| Index files, log, `SCRATCHPAD.md`, `HANDOFF.md`, `AGENTS.md`, `CLAUDE*.md` | none | none | none |
+| Skills | `name`, `description` per Agent Skills spec | none | none |
+
+Definitions: `description` is one line, at most 150 characters, written as "what this covers and when to open it". `updated` and `date` are `YYYY-MM-DD`. `origin` is `user`, `code`, or `external` (provenance of the claim). `superseded_by` is a relative path to the file that replaces this one. The replacing file needs no back-pointer.
+
+## Index line format
+
+Exact format for each generated index line:
+
+```markdown
+- [Title](relative/path.md) (type, status): description
+```
+
+`type` is derived from the folder (`tutorial`, `how-to`, `reference`, `explanation`, `decision`, `knowledge`, `task`, `memory`). `status` and `description` come from the file's frontmatter. Index files wrap generated lines in:
+
+```markdown
+<!-- BEGIN GENERATED INDEX -->
+...
+<!-- END GENERATED INDEX -->
+```
+
+Anything outside the markers is hand-written and must never be modified by a script.
 
 ## AGENTS.md shape
 
