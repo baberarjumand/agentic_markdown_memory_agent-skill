@@ -39,7 +39,7 @@
 
 An [Agent Skills](https://agentskills.io/) package that sets up a markdown memory layout for a project. A short `AGENTS.md` stays in every session. Docs, decisions, knowledge pages, and tasks load only when a task needs them.
 
-The agent asks before it reads the tree, shows a move plan, and moves files only after a second confirmation. In Cursor it also writes a scoped rule. In every other agent it writes `AGENTS.md`.
+The agent asks once before a read-only scan and plan, then once before apply. Dry-run stops after the plan. In Cursor it also writes a scoped rule. In every other agent it writes `AGENTS.md`.
 
 **Recommended environment:** Cursor, VS Code, or a local CLI that can read and write the project. This skill does not work without that local filesystem. See [Recommended environment](#recommended-environment).
 
@@ -63,7 +63,7 @@ Repo: [github.com/baberarjumand/agentic_markdown_memory_agent-skill](https://git
 
 | Feature | Description |
 | --- | --- |
-| **Confirm before any move** | Asks whether to analyze, then whether to migrate, then shows a move table and waits for a final yes |
+| **Two confirmation gates** | Gate 1: scan read-only and build a plan. Gate 2: apply. Dry-run stops after the plan with no writes |
 | **Existing files stay intact** | Reports where knowledge already lives and proposes destinations. Does not overwrite a file that is already there |
 | **Default layout** | `AGENTS.md`, `docs/` (tutorials, how-to, reference, explanation, decisions, archive), `knowledge/`, `sources/`, `tasks/`, optional `SCRATCHPAD.md` / `memory/gotchas.md` — only what the project needs |
 | **Cursor rule** | When Cursor is in use, writes `.cursor/rules/agentic-memory.mdc` scoped to memory files. It points at `AGENTS.md` and is not always-on. Optional on-demand `plan-gate.mdc` for plan-before-implement |
@@ -305,10 +305,10 @@ Run it on the target repo. Agents that scan `.agents/skills/` or `.dsh/skills/` 
 
 | Step | What you do | What the agent does |
 | --- | --- | --- |
-| 1 | Run `/initialize-agentic-memory` | Asks whether to analyze the project |
-| 2 | Yes or no | Yes: reports the current tree and a proposed layout. No: shows the default layout |
-| 3 | Yes or no to migrate | If yes, builds a move table and waits |
-| 4 | Final yes | Moves files, writes `AGENTS.md`, and in Cursor writes the rule |
+| 1 | Run `/initialize-agentic-memory` | Asks Gate 1: scan read-only and build a plan? |
+| 2 | Yes | Preflight, scan, show plan table (or `.agentic-memory-plan.md` if large) |
+| 2 | No | Shows default layout and stops (offer to rerun with a scan) |
+| 3 | Gate 2: apply? | On yes: moves files, writes `AGENTS.md`, Cursor rule. Dry-run: stop after step 2 with no writes |
 
 ### Example prompts
 
@@ -317,11 +317,11 @@ Run it on the target repo. Agents that scan `.agents/skills/` or `.dsh/skills/` 
 ```
 
 ```text
-Use initialize-agentic-memory. I want you to analyze this repo before proposing a layout.
+Use initialize-agentic-memory. Scan this project and build a plan.
 ```
 
 ```text
-Don't scan the repo. Show the default memory layout and ask me before moving anything.
+Dry-run initialize-agentic-memory. Show the plan but write nothing.
 ```
 
 [↑ Back to top](#agentic_markdown_memory_agent-skill)
@@ -331,28 +331,23 @@ Don't scan the repo. Show the default memory layout and ask me before moving any
 ## How it works
 
 ```text
-Ask: analyze the current project?
+Gate 1: scan read-only and build a plan?
         │
-        ├─ yes → scan the project on disk
-        │         report current files
-        │         propose a layout
+        ├─ no  → show default layout, stop
         │
-        └─ no  → show the default layout
+        └─ yes → preflight → scan → plan table
                   │
-                  ▼
-        Ask: migrate?
+                  ├─ dry-run → stop (write nothing)
                   │
-                  └─ yes → move table
+                  └─ Gate 2: apply?
                             │
-                            ▼
-                  Ask: apply?  (last confirmation)
-                            │
-                            └─ yes → move files
+                            └─ yes → move files (git mv when tracked)
+                                     rewrite planned references
                                      write AGENTS.md
                                      Cursor: write .cursor/rules/agentic-memory.mdc
 ```
 
-The agent loads this skill's `name` and `description` first, then `SKILL.md`, then `references/layout.md`, `references/cursor-rule.md`, and `references/plan-gate.md` only when it needs them ([specification](https://agentskills.io/specification)).
+The agent loads this skill's `name` and `description` first, then `SKILL.md`, then references (`layout.md`, `practices.md`, `cursor-rule.md`, `plan-gate.md`, `migration-safety.md`) only when needed ([specification](https://agentskills.io/specification)).
 
 [↑ Back to top](#agentic_markdown_memory_agent-skill)
 
@@ -448,8 +443,8 @@ You need a terminal for `npx skills add` or `git clone`. The agent does the file
 **Will it delete my notes?**
 It is instructed not to. Destinations that already exist stop the move. Archive and decision files stay in git.
 
-**Why so many questions?**
-So it does not scan or reorganize the repo before you agree, and so the last yes is specifically about the move table.
+**Why so few questions?**
+A read-only scan is harmless; the meaningful decision is applying the plan. Two gates (scan/plan, then apply) keep control without fatigue. Say dry-run to stop after the plan.
 
 **Windows?**
 `npx skills add baberarjumand/agentic_markdown_memory_agent-skill --copy -g -y`

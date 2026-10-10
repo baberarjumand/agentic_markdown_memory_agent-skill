@@ -3,17 +3,16 @@ name: initialize-agentic-memory
 description: >
   Initializes a repository's agentic markdown memory when the agent can list
   and edit the project on disk (Cursor, VS Code, or a local CLI). Asks whether
-  to analyze the project, proposes a layout, and moves files only after showing
-  a move plan and receiving a final confirmation. Creates a Cursor rule when
-  Cursor is in use, otherwise writes AGENTS.md. If there is no local filesystem,
-  the agent tells the user and stops. Use only when the user invokes
-  /initialize-agentic-memory.
+  to scan the project and build a plan, then applies only after a final
+  confirmation. Supports dry-run. Creates a Cursor rule when Cursor is in use,
+  otherwise writes AGENTS.md. If there is no local filesystem, the agent tells
+  the user and stops. Use only when the user invokes /initialize-agentic-memory.
 disable-model-invocation: true
 ---
 
 # Initialize agentic memory
 
-Run this only when the user invokes `/initialize-agentic-memory`. Do not reorganize files before the final confirmation in this procedure.
+Run this only when the user invokes `/initialize-agentic-memory`. Do not reorganize files before Gate 2 confirmation. Exactly two questions on the normal path.
 
 ## Filesystem required
 
@@ -21,7 +20,7 @@ This skill runs only when you can list the project directory and create or move 
 
 If you cannot do both, stop. Tell the user this skill needs a local filesystem, and name Cursor, VS Code, or a local CLI as the place to run it. Do not ask questions. Do not propose a layout. Do not read [references/layout.md](references/layout.md). Do not write `AGENTS.md` or a rule file in the chat.
 
-When you can read and write the project, read [references/layout.md](references/layout.md) before proposing a structure. Read [references/practices.md](references/practices.md) when writing `AGENTS.md` reflection, load-rule, or plan-pointer blocks, or when explaining scratchpad versus handoff.
+When you can read and write the project, read [references/layout.md](references/layout.md) before proposing a structure. Read [references/practices.md](references/practices.md) when writing `AGENTS.md` blocks. Read [references/migration-safety.md](references/migration-safety.md) before applying moves.
 
 ## Detect the editor
 
@@ -33,94 +32,62 @@ Treat the session as Cursor when any of these are true:
 
 Otherwise use the generic agent path: write `AGENTS.md` and do not create `.cursor/rules/`. Ask only if none of those signals exist and the choice would change which instruction file you write.
 
-Claude Code, Codex, Gemini CLI, Grok, DeepSeek coding agents, and VS Code agents that can read and write the project use this generic path. Cursor adds the rule file in Step 4.
-
-## Step 1. Ask whether to analyze
+## Gate 1. Scan and build a plan?
 
 Ask this, then wait:
 
-> Analyze the current project structure before suggesting a layout? Yes or no.
+> Scan this project read-only and build a plan? yes / no
 
-Do not scan the tree while waiting.
+Do not scan the tree while waiting. Anything other than a clear yes means stop after showing the default layout from [references/layout.md](references/layout.md) (offer to rerun with a scan).
 
-## Step 2a. User says yes
+If the user asks for a dry run (or passes `--dry-run`), treat Gate 1 yes as approval to scan and show the plan only; write nothing after the plan.
 
-Scan the project. Skip `.git`, `node_modules`, `dist`, `build`, `vendor`, and dependency caches.
+## After Gate 1 yes
 
-Report:
+1. Run preflight ([references/migration-safety.md](references/migration-safety.md); optional `node scripts/preflight.mjs`). Dirty tree: stop unless explicitly acknowledged. Non-git: warn and require acknowledgement at Gate 2.
+2. Scan the project. Skip `.git`, `node_modules`, `dist`, `build`, `vendor`, and dependency caches.
+3. Report existing markdown and instruction files and where knowledge lives today.
+4. Build the plan table (do not apply). Row types: `move`, `create`, `update`, opt-in `add frontmatter`, opt-in `.gitignore` append, and `references to update` per migration-safety.
 
-- which markdown and instruction files already exist (`AGENTS.md`, `README.md`, `CLAUDE.md`, `.cursor/rules/`, `docs/`, and any other files that hold project knowledge)
-- where that information lives today, in a short tree
+Creating a file counts as a change. Include when needed:
 
-Then propose a layout based on [references/layout.md](references/layout.md), adapted to files that already exist. Do not propose empty directories that this project has no use for.
+- `AGENTS.md`, `docs/index.md`
+- `.cursor/rules/agentic-memory.mdc` (Cursor path)
+- `SCRATCHPAD.md`, `memory/gotchas.md` when warranted
+- `.cursor/rules/plan-gate.mdc` only when the user opted into the plan gate ([references/plan-gate.md](references/plan-gate.md))
+- Opt-in pointer create/update rows for existing tool files (see tool-notes when present)
 
-Ask, then wait:
+Do not rewrite bodies of existing user documents. Moves and new instruction files only. Frontmatter rows: merge missing keys only; never overwrite existing keys; flag derived `description` for review.
 
-> Migrate to this structure? Yes or no.
+If the plan has more than about 20 rows, write it to `.agentic-memory-plan.md` at the repo root (created only after Gate 1), list it in the plan as temporary, and delete it after a successful apply. Otherwise show the plan in chat only.
 
-If no, stop. Do not move or create files.
+Dry-run: stop here. Write nothing (including no plan file unless already shown as the deliverable and the user asked to keep it; default is write nothing).
 
-If yes, continue at Step 3.
-
-## Step 2b. User says no
-
-Show the default layout from [references/layout.md](references/layout.md). Do not scan the tree yet.
-
-Ask, then wait:
-
-> Migrate to this default structure? Yes or no.
-
-If no, stop. Do not move or create files.
-
-If yes, scan the project using the same skip list as Step 2a, then continue at Step 3.
-
-## Step 3. Show the move plan
-
-Run preflight from [references/migration-safety.md](references/migration-safety.md) (optional: `node scripts/preflight.mjs`). On a dirty git tree, stop before showing the plan unless the user explicitly acknowledges. On a non-git repo, warn about rollback and require acknowledgement at apply.
-
-Build a plan. Do not apply it. Follow migration-safety for reference-rewrite rows and the opt-in `.gitignore` append row.
-
-For each existing knowledge or instruction file, name the current path, the destination, and why. Group files that stay where they are. List files you will not touch: source code, lockfiles, secrets, `.git`, and dependencies.
-
-Creating a file counts as a change. Include new files in the plan:
-
-- `AGENTS.md`, if it is missing or if it must gain a short pointer section for the new layout
-- `docs/index.md`, when any doc will live under `docs/`
-- `.cursor/rules/agentic-memory.mdc`, only on the Cursor path
-- `SCRATCHPAD.md`, only when the project already keeps a working checklist or the user asks for one
-- `memory/gotchas.md`, only when `memory/` is in the plan or the project already records resolved roadblocks
-- `.cursor/rules/plan-gate.mdc`, only on the Cursor path when the user wants a plan-before-implement gate or an existing always-on plan protocol should move off the hot path. Body from [references/plan-gate.md](references/plan-gate.md). Keep `alwaysApply` false.
-
-Do not rewrite the body of a user's existing document as part of the plan. Moves and new instruction files only.
-
-Plan table row types: `move`, `create`, `update`, and opt-in `add frontmatter`. Frontmatter rows: only add a frontmatter block at the top of a file, never rewrite the body; merge missing keys only and never overwrite existing keys; derive `description` from the first heading or paragraph and flag it "needs human review"; set `updated` to today. All files this skill creates itself get frontmatter by default per [references/layout.md](references/layout.md) File metadata. Frontmatter rows are opt-in for existing user files.
-
-Show the plan as a table: current path, new path, reason (and row type when useful).
+## Gate 2. Apply?
 
 Ask, then wait:
 
-> Apply this reorganization? Yes or no. This is the last confirmation.
+> Apply this plan? yes / no. This is the last confirmation.
 
-## Step 4. Apply only after yes
+Anything other than a clear yes means stop. Do not move or create files.
 
-If the user says anything other than a clear yes, stop. Do not move files.
+## Apply (Gate 2 yes only)
 
-After a clear yes (details in [references/migration-safety.md](references/migration-safety.md)):
+Follow [references/migration-safety.md](references/migration-safety.md):
 
-1. Create destination directories that the plan needs.
-2. Move files with `git mv` when tracked, plain move when untracked. If the destination exists and is not the same file, stop and ask. Do not overwrite.
-3. Apply approved "references to update" rows only. Leave a one-line pointer at an old path only when something outside the repo still links there. Do not leave a second copy of the content.
-4. Write or update `AGENTS.md` so it is the short orientation file in [references/layout.md](references/layout.md). Copy blocks from [references/practices.md](references/practices.md) as that shape requires (`load-rule`, `write-rules`, `reflection`, and `plan-pointer` only if the plan gate exists). Point at the indexes and at scratchpad only when those files exist. Do not paste the docs or the full plan-gate protocol into it.
-5. On the Cursor path, write `.cursor/rules/agentic-memory.mdc` from the fenced template in [references/cursor-rule.md](references/cursor-rule.md). Append optional plan-gate lines only when the plan includes a plan gate. Set `globs` to the memory paths that exist after the move. Keep `alwaysApply` false.
-6. On the Cursor path, if the plan includes a plan gate, write `.cursor/rules/plan-gate.mdc` from [references/plan-gate.md](references/plan-gate.md). Keep `alwaysApply` false.
-7. On any other path, do not create `.cursor/rules/`. `AGENTS.md` is the behavior file. Point at [references/plan-gate.md](references/plan-gate.md) from `AGENTS.md` when the plan includes that gate.
-8. Verify destinations, pointer stubs, and links per migration-safety. Report what moved, what was created, which references changed, and a user-runnable rollback command. Never run a destructive rollback yourself. Mention that `memory-audit` can check the layout later if installed.
+1. Create destination directories.
+2. `git mv` tracked files; plain move for untracked. Never overwrite.
+3. Apply approved reference-rewrite rows; pointer stubs only when needed outside the repo.
+4. Write `AGENTS.md` from layout shape; copy practices blocks (`load-rule`, `write-rules`, `reflection`, `plan-pointer` only if plan gate exists).
+5. Cursor: write `.cursor/rules/agentic-memory.mdc` from the fenced template in [references/cursor-rule.md](references/cursor-rule.md); optional plan-gate lines only when opted in. Write `plan-gate.mdc` only if planned.
+6. Non-Cursor: no `.cursor/rules/`.
+7. Verify; report moves, creates, reference changes, and a user-runnable rollback command. Never run destructive rollback. Mention `memory-audit` if installed. Delete `.agentic-memory-plan.md` after success.
 
 ## Limits
 
-- Do not delete user content. Archive and decisions stay in git.
-- Do not move secrets, `.env` files, or credentials into `docs/` or `knowledge/`.
-- Do not create the optional folders or files in the layout (`clients/`, `sources/`, `knowledge/`, `tasks/`, `memory/`, `SCRATCHPAD.md`, `HANDOFF.md`, plan-gate) unless the plan has a file that belongs there or the user asked for that piece.
-- Do not leave generated scratch in the tree as citable evidence. Clear `SCRATCHPAD.md` when the task is done. Promote reflection into `memory/`, `knowledge/`, or `docs/decisions/`.
-- A how-to and a skill must not both contain the same procedure. The skill points at the how-to.
-- Do not continue in a chat that cannot list and edit the project. Stop after telling the user to use Cursor, VS Code, or a local CLI.
+- No scan before Gate 1. No change before Gate 2 (except dry-run stop after plan).
+- Do not delete user content. Do not move secrets, `.env`, credentials, `.git`, or dependency folders.
+- Do not create optional layout pieces unless the plan has a file for them or the user asked.
+- Clear `SCRATCHPAD.md` when done; promote reflection into durable memory.
+- A how-to and a skill must not both contain the same procedure.
+- Stop in chats without a local filesystem.
